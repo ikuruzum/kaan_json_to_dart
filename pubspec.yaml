@@ -8,8 +8,10 @@ dependencies:
   convert: "^3.0.1"
   dart_style: "^2.2.1"
   grapheme_splitter: ^1.0.1
-
+  path: "^1.8.1"
 dev_dependencies:
   test: "^1.20.1"
-  path: "^1.8.1"
+
   lints: any
+
+publish_to: none
