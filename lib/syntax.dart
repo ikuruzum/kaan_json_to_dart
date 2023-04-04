@@ -1,4 +1,5 @@
 import 'package:kaan_json_to_dart/json_ast/json_ast.dart' show Node;
+
 import 'helpers.dart';
 
 const String emptyListWarn = "list is empty";
@@ -92,12 +93,12 @@ class TypeDefinition {
 
   String _buildParseClass(String expression) {
     final properType = subtype ?? name;
-    return 'new $properType.fromJson($expression)';
+    return ' $properType.fromJson($expression)';
   }
 
   String _buildToJsonClass(String expression, [bool nullGuard = true]) {
     if (nullGuard) {
-      return '$expression!.toJson()';
+      return '$expression.toJson()';
     }
     return '$expression.toJson()';
   }
@@ -117,10 +118,10 @@ class TypeDefinition {
       return "$fieldKey = DateTime.tryParse(json['$key']);";
     } else if (name == 'List') {
       // list of class
-      return "if (json['$key'] != null) {\n\t\t\t$fieldKey = <$subtype>[];\n\t\t\tjson['$key'].forEach((v) { $fieldKey!.add(new $subtype.fromJson(v)); });\n\t\t}";
+      return "$fieldKey = <$subtype>[];\n\t\t\tjson['$key'].forEach((v) { $fieldKey.add( $subtype.fromJson(v)); });";
     } else {
       // class
-      return "$fieldKey = json['$key'] != null ? ${_buildParseClass(jsonKey)} : null;";
+      return "$fieldKey = ${_buildParseClass(jsonKey)};";
     }
   }
 
@@ -132,14 +133,10 @@ class TypeDefinition {
       return "data['$key'] = $thisKey;";
     } else if (name == 'List') {
       // class list
-      return """if ($thisKey != null) {
-      data['$key'] = $thisKey!.map((v) => ${_buildToJsonClass('v', false)}).toList();
-    }""";
+      return "data['$key'] = $thisKey.map((v) => ${_buildToJsonClass('v', false)}).toList();";
     } else {
       // class
-      return """if ($thisKey != null) {
-      data['$key'] = ${_buildToJsonClass(thisKey)};
-    }""";
+      return "data['$key'] = ${_buildToJsonClass(thisKey)};";
     }
   }
 }
@@ -272,12 +269,27 @@ class ClassDefinition {
     sb.write('\t$name' + '.scratch' + '({');
     var i = 0;
     var len = fields.keys.length - 1;
+
     for (var key in fields.keys) {
       final f = fields[key]!;
+      String end = "";
+      if (f.name == "String") {
+        end = "=''";
+      } else if (f.name.contains("List")) {
+        end = "=[]";
+      } else if (f.name == "bool") {
+        end = "=false";
+      } else if (f.name == "int") {
+        end = "=0";
+      } else if (f.name == "double") {
+        end = "=0.0";
+      } else {
+        end = "=" + f.name + "()";
+      }
       final publicFieldName =
           fixFieldName(key, typeDef: f, privateField: false);
       _addTypeDef(f, sb);
-      sb.write('? $publicFieldName');
+      sb.write('? $publicFieldName $end');
       if (i != len) {
         sb.write(', ');
       }
@@ -290,9 +302,9 @@ class ClassDefinition {
           fixFieldName(key, typeDef: f, privateField: false);
       final privateFieldName =
           fixFieldName(key, typeDef: f, privateField: true);
-      sb.write('if ($publicFieldName != null) {\n');
+    //  sb.write('if ($publicFieldName != null) {\n');
       sb.write('this.$privateFieldName = $publicFieldName;\n');
-      sb.write('}\n');
+    //  sb.write('}\n');
     }
     sb.write('}');
     return sb.toString();
@@ -304,12 +316,29 @@ class ClassDefinition {
     var i = 0;
     var len = fields.keys.length - 1;
     for (var key in fields.keys) {
+      var forget = false;
+      var end = "";
       final f = fields[key]!;
-      final fieldName =
-          fixFieldName(key, typeDef: f, privateField: privateFields);
-      sb.write('this.$fieldName');
-      if (i != len) {
-        sb.write(', ');
+      if (f.name == "String") {
+        end = "=''";
+      } else if (f.name.contains("List")) {
+        end = "= const []";
+      } else if (f.name == "bool") {
+        end = "=false";
+      } else if (f.name == "int") {
+        end = "=0";
+      } else if (f.name == "double") {
+        end = "=0.0";
+      } else {
+        forget = true;
+      }
+      if (!forget) {
+        final fieldName =
+            fixFieldName(key, typeDef: f, privateField: privateFields);
+        sb.write('this.$fieldName $end');
+        if (i != len) {
+          sb.write(', ');
+        }
       }
       i++;
     }
@@ -331,7 +360,7 @@ class ClassDefinition {
   String get _jsonGenFunc {
     final sb = StringBuffer();
     sb.write(
-        '\tMap<String, dynamic> toJson() {\n\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();\n');
+        '\tMap<String, dynamic> toJson() {\n\t\tfinal Map<String, dynamic> data =  <String, dynamic>{};\n');
     for (var k in fields.keys) {
       sb.write('\t\t${fields[k]!.toJsonExpression(k, privateFields)}\n');
     }
