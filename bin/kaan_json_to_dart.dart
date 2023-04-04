@@ -13,8 +13,10 @@ void main(List<String> arguments) {
   if (Directory(yer).existsSync()) {
     Directory(yer).listSync().forEach((entity) {
       if (entity is File) {
-        var ad = basename(yer);
-        tekDosya(ad, entity.path, ayirici, true);
+        if (basename(entity.path).endsWith(".json")) {
+          var ad = basename(yer);
+          tekDosya(ad, entity.path, ayirici, true);
+        }
       }
     });
   } else if (File(yer).existsSync()) {
