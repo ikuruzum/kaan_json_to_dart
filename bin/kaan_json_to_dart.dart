@@ -38,25 +38,23 @@ String toSnakeCase(String val) {
       .toLowerCase();
 }
 
-void tekDosya(String ad, String yer, String ayirici, [modelfile = false]) {
+void tekDosya(String ad, String yer, String ayirici,
+    [modelfile = false]) async {
   try {
     final classGenerator = ModelGenerator(ad);
     final jsonRawData = File(yer).readAsStringSync();
     DartCode dartCode = classGenerator.generateDartClasses(jsonRawData);
     var yazilcak = reversed(yer);
-    var ek = "";
-    if (modelfile) {
-      ek = "model$ayirici";
-    }
+
     yazilcak = yazilcak.substring(yazilcak.indexOf(ayirici));
     yazilcak = reversed(yazilcak);
-    var dosya = File("$yazilcak$ek${toSnakeCase(ad)}.dart");
+    var dosya = File("$yazilcak${toSnakeCase(ad)}.dart");
     if (dosya.existsSync()) {
       stdout.writeln(
           "${basename(dosya.path)} diye bir dosya mevcut, bu es geçiliyor. Geçilmesini istemiyorsan dosyayı sil");
     }
-    dosya.createSync();
-    dosya.writeAsStringSync(dartCode.code);
+    await dosya.create();
+    await dosya.writeAsString(dartCode.code);
   } catch (e) {
     stdout.writeln(
         "bir şeyler yanlış gitti, sorunu bulabilmen için ilgili hata ise şu : \n\n\n  $e");
