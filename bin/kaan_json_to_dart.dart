@@ -10,11 +10,6 @@ void main(List<String> arguments) {
   stdout.writeln('Json nerede (/x/y/z/abc.json)?');
   final yer = stdin.readLineSync() ?? "";
 
-  if (!Directory(yer).existsSync() && !File(yer).existsSync()) {
-    stdout.writeln('Geçerli yer girmelisin');
-    exit(1);
-  }
-
   if (Directory(yer).existsSync()) {
     Directory(yer).listSync().forEach((entity) {
       if (entity is File) {
@@ -26,6 +21,9 @@ void main(List<String> arguments) {
     stdout.writeln('Adı ne olsun?');
     final ad = stdin.readLineSync() ?? "";
     tekDosya(camelCase(ad), yer, ayirici, true);
+  } else {
+    stdout.writeln('Geçerli yer girmelisin');
+    exit(1);
   }
 }
 
