@@ -1,4 +1,5 @@
 import 'package:kaan_json_to_dart/json_ast/json_ast.dart' show Node;
+
 import 'helpers.dart';
 
 const String emptyListWarn = "list is empty";
@@ -272,12 +273,27 @@ class ClassDefinition {
     sb.write('\t$name' + '.scratch' + '({');
     var i = 0;
     var len = fields.keys.length - 1;
+
     for (var key in fields.keys) {
       final f = fields[key]!;
+      String end = "";
+      if (f.name == "String") {
+        end = "=''";
+      } else if (f.name.contains("List")) {
+        end = "=[]";
+      } else if (f.name == "bool") {
+        end = "=false";
+      } else if (f.name == "int") {
+        end = "=0";
+      } else if (f.name == "double") {
+        end = "=0.0";
+      } else {
+        end = "=" + f.name + "()";
+      }
       final publicFieldName =
           fixFieldName(key, typeDef: f, privateField: false);
       _addTypeDef(f, sb);
-      sb.write('? $publicFieldName');
+      sb.write('? $publicFieldName $end');
       if (i != len) {
         sb.write(', ');
       }
