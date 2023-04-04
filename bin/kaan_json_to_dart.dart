@@ -14,7 +14,7 @@ void main(List<String> arguments) {
     Directory(yer).listSync().forEach((entity) {
       if (entity is File) {
         var ad = basename(yer);
-        tekDosya(ad, yer, ayirici, true);
+        tekDosya(ad, entity.path, ayirici, true);
       }
     });
   } else if (File(yer).existsSync()) {
