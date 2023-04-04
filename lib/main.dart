@@ -1,5 +1,7 @@
 import 'dart:io';
+
 import "package:path/path.dart" show dirname, join, normalize;
+
 import 'json_to_dart.dart';
 
 String _scriptPath() {
@@ -16,7 +18,7 @@ String _scriptPath() {
 main() {
   final classGenerator = ModelGenerator('Sample');
   var currentDirectory = dirname(_scriptPath());
-  currentDirectory = currentDirectory.substring(1);
+  // currentDirectory = currentDirectory.substring(1);
   final filePath = normalize(join(currentDirectory, 'sample.json'));
   final jsonRawData = File(filePath).readAsStringSync();
   DartCode dartCode = classGenerator.generateDartClasses(jsonRawData);
