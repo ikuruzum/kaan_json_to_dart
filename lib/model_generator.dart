@@ -149,7 +149,6 @@ class ModelGenerator {
   DartCode generateDartClasses(String rawJson) {
     final unsafeDartCode = generateUnsafeDart(rawJson);
     final formatter = DartFormatter();
-    return DartCode(
-        formatter.format(unsafeDartCode.code), unsafeDartCode.warnings);
+    return  DartCode(formatter.format(unsafeDartCode.code), unsafeDartCode.warnings);
   }
 }
