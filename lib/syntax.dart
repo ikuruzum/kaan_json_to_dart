@@ -302,9 +302,9 @@ class ClassDefinition {
           fixFieldName(key, typeDef: f, privateField: false);
       final privateFieldName =
           fixFieldName(key, typeDef: f, privateField: true);
-    //  sb.write('if ($publicFieldName != null) {\n');
+      //  sb.write('if ($publicFieldName != null) {\n');
       sb.write('this.$privateFieldName = $publicFieldName;\n');
-    //  sb.write('}\n');
+      //  sb.write('}\n');
     }
     sb.write('}');
     return sb.toString();
@@ -349,7 +349,9 @@ class ClassDefinition {
   String get _jsonParseFunc {
     final sb = StringBuffer();
     sb.write('\t$name');
-    sb.write('.fromJson(Map<String, dynamic> json) {\n');
+    sb.write(""".fromJson(Map<String, dynamic> j) {
+    var json = j.map(
+        (key, value) => MapEntry(key, value is String ? value.trim : value));""");
     for (var k in fields.keys) {
       sb.write('\t\t${fields[k]!.jsonParseExpression(k, privateFields)}\n');
     }
