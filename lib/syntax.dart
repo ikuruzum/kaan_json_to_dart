@@ -312,7 +312,10 @@ class ClassDefinition {
 
   String get _defaultConstructor {
     final sb = StringBuffer();
-    sb.write('\t$name.scratch({');
+    if (fields.keys.isEmpty) {
+      return "";
+    }
+    sb.write('\t$name({');
     var i = 0;
     var len = fields.keys.length - 1;
     for (var key in fields.keys) {
@@ -335,14 +338,42 @@ class ClassDefinition {
       if (!forget) {
         final fieldName =
             fixFieldName(key, typeDef: f, privateField: privateFields);
-        sb.write('this.$fieldName $end');
+        sb.write('${f.name}? $fieldName ');
         if (i != len) {
-          sb.write(', ');
+          sb.write(', \n');
         }
       }
       i++;
     }
-    sb.write('});');
+    sb.write('}){');
+    for (var key in fields.keys) {
+      var forget = false;
+      var end = "";
+      final f = fields[key]!;
+      if (f.name == "String") {
+        end = "=''";
+      } else if (f.name.contains("List")) {
+        end = "= const []";
+      } else if (f.name == "bool") {
+        end = "=false";
+      } else if (f.name == "int") {
+        end = "=0";
+      } else if (f.name == "double") {
+        end = "=0.0";
+      } else {
+        forget = true;
+      }
+      if (!forget) {
+        final fieldName =
+            fixFieldName(key, typeDef: f, privateField: privateFields);
+        sb.write('this.$fieldName  = $fieldName ?? this.$fieldName');
+        if (i != len) {
+          sb.write('; ');
+        }
+      }
+      i++;
+    }
+    sb.write("}");
     return sb.toString();
   }
 
@@ -374,9 +405,9 @@ class ClassDefinition {
   @override
   String toString() {
     if (privateFields) {
-      return 'class $name {\n$_fieldList\n\n$_emptyConstructor\n\n$_defaultPrivateConstructor\n\n$_gettersSetters\n\n$_jsonParseFunc\n\n$_jsonGenFunc\n}\n';
+      return 'class $name {\n$_fieldList\n\n$_defaultPrivateConstructor\n\n$_gettersSetters\n\n$_jsonParseFunc\n\n$_jsonGenFunc\n}\n';
     } else {
-      return 'class $name {\n$_fieldList\n\n$_emptyConstructor\n\n$_defaultConstructor\n\n$_jsonParseFunc\n\n$_jsonGenFunc\n}\n';
+      return 'class $name {\n$_fieldList\n\n$_defaultConstructor\n\n$_jsonParseFunc\n\n$_jsonGenFunc\n}\n';
     }
   }
 }
