@@ -266,7 +266,7 @@ class ClassDefinition {
 
   String get _defaultPrivateConstructor {
     final sb = StringBuffer();
-    sb.write('\t$name' + '.scratch' + '({');
+    sb.write('\t$name' + '' + '({');
     var i = 0;
     var len = fields.keys.length - 1;
 
