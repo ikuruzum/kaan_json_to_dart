@@ -382,7 +382,7 @@ class ClassDefinition {
     sb.write('\t$name');
     sb.write(""".fromJson(Map<String, dynamic> j) {
     var json = j.map(
-        (key, value) => MapEntry(key, value is String ? value.trim : value));""");
+        (key, value) => MapEntry(key, value is String ? value.trim() : value));""");
     for (var k in fields.keys) {
       sb.write('\t\t${fields[k]!.jsonParseExpression(k, privateFields)}\n');
     }
