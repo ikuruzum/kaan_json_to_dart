@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:kaan_json_to_dart/clipboard.dart';
 import "package:path/path.dart" show dirname, join, normalize;
 
 import 'json_to_dart.dart';
@@ -22,5 +23,6 @@ main() {
   final filePath = normalize(join(currentDirectory, 'sample.json'));
   final jsonRawData = File(filePath).readAsStringSync();
   DartCode dartCode = classGenerator.generateDartClasses(jsonRawData);
+  cl.write(dartCode.code);
   print(dartCode.code);
 }
