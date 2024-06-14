@@ -20,9 +20,14 @@ main() {
   final classGenerator = ModelGenerator('Sample');
   var currentDirectory = dirname(_scriptPath());
   // currentDirectory = currentDirectory.substring(1);
-  final filePath = normalize(join(currentDirectory, 'sample.json'));
+  var filePath = normalize(join(currentDirectory, 'sample.json'));
+  if (Platform.isWindows) {
+    if (filePath.startsWith(r"\")) {
+      filePath = filePath.substring(1);
+    }
+  }
   final jsonRawData = File(filePath).readAsStringSync();
   DartCode dartCode = classGenerator.generateDartClasses(jsonRawData);
-  cl.write(dartCode.code);
   print(dartCode.code);
+  cl.write(dartCode.code);
 }

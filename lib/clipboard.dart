@@ -80,10 +80,10 @@ class _LinuxClipboard implements Clipboard {
   }
 }
 
-final winCopyPath =
-    path.join(path.current, 'lib/src/backends/windows/copy.exe');
-final winPastePath =
-    path.join(path.current, 'lib/src/backends/windows/paste.exe');
+final winCopyPath = path
+    .normalize(path.join(path.current, 'lib/src/backends/windows/copy.exe'));
+final winPastePath = path
+    .normalize(path.join(path.current, 'lib/src/backends/windows/paste.exe'));
 
 class _WindowsClipboard implements Clipboard {
   @override

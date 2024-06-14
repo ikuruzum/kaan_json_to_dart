@@ -1,27 +1,20 @@
-{
-  "username": "javiercbk",
-  "favouriteInteger": 18,
-  "favouriteDouble": 1.618,
-  "url": "https://api.github.com/users/javiercbk",
-  "html_url": "https://github.com/javiercbk",
-  "tags": ["dart", "json", "cool"],
-  "randomIntegers": [1, 2, 3],
-  "randomDoubles": [1.1, 2.2, 3.3],
-  "personalInfo": {
-    "firstName": "Javier",
-    "lastName": "Lecuona",
-    "location": "Buenos Aires, Argentina",
-    "phones": [
-      {
-        "type": "work",
-        "number": "123-this-is-a-fake-phone",
-        "shouldCall": false
-      },
-      {
-        "type": "home",
-        "number": "123-this-is-a-phony-phone",
-        "shouldCall": false
-      }
-    ]
-  }
-}
+  {
+                "a_id": "1046",
+                "a_tarih": "31.08.2022 00:00:00",
+                "a_depo_id": "2",
+                "DEPADI": "Ana Depo",
+                "a_cikisdepo_id": "0",
+                "CKSDEPO": "Ana Depo",
+                "a_adi": "",
+                "a_cuser": "18695",
+                "CUSERNAME": "Venur Berberoğlu",
+                "a_cdate": "31.08.2022 10:36:00",
+                "a_muser": "29459",
+                "MUSERNAME": "Ahmet ERTAŞ",
+                "a_mdate": "13.12.2022 18:02:00",
+                "a_udf": "",
+                "a_udf_grp": "",
+                "a_istek_onay": "1",
+                "a_kabul_onay": "0",
+                "a_onay_ack": ""
+            }
