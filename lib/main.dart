@@ -16,17 +16,17 @@ String _scriptPath() {
   return script;
 }
 
-main() {
+main() async{
   final classGenerator = ModelGenerator('Sample');
   var currentDirectory = dirname(_scriptPath());
   // currentDirectory = currentDirectory.substring(1);
-  var filePath = normalize(join(currentDirectory, 'sample.json'));
+  var filePath = normalize(join(currentDirectory, 'input.json'));
   if (Platform.isWindows) {
     if (filePath.startsWith(r"\")) {
       filePath = filePath.substring(1);
     }
   }
-  final jsonRawData = File(filePath).readAsStringSync();
+  String jsonRawData = await File(filePath).readAsString().catchError((e)=> cl.read());
   DartCode dartCode = classGenerator.generateDartClasses(jsonRawData);
   print(dartCode.code);
   cl.write(dartCode.code);
